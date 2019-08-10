@@ -16,8 +16,6 @@ connection.connect(function(err) {
     afterConnect();
 });
 
-let quantity = 0;
-
 function afterConnect() {
     connection.query("select * from products", function(err, res) {
         if (err) throw err;
@@ -38,34 +36,14 @@ function afterConnect() {
         ])
         .then(function(answer) {
             let prodId = answer.item_id;
+            if (answer.quantity <= res[prodId - 1].stock_quantity) {
             console.log(res[prodId - 1].product_name);
+            } else {
+                console.log("too many");
+            }
         })
         connection.end();
-        // buyItem();
     })
 }
 
-// function buyItem() {
-//     inquirer
-//         .prompt([
-//             {
-//                 name: 'item_id',
-//                 type: 'input',
-//                 message: "Please select an item by id number"
-//             },
-//             {
-//                 name: 'quantity',
-//                 type: 'input',
-//                 message: "How many of these fantastic items would you like to buy my great friend?"
-//             }
-//         ])
-//         .then(function(answer) {
-//             // connection.query("select * from products", function(err, res) {
-//                 // if (err) throw err;
-//                 for (let i = 0; i < res.length; i++);
-//                 if (answer.item_id === res[i].item_id)
-//                 console.log(res[i].product_name);
-//             })
-//         // })
-// }
 
