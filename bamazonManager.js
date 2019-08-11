@@ -15,7 +15,7 @@ connection.connect(function(err) {
     afterConnect();
 })
 
-function afterConnect() {
+const afterConnect = () => {
     inquirer
         .prompt([{
             name: 'managerMenu',
@@ -23,27 +23,46 @@ function afterConnect() {
             message: "What managerial things do you want to do?",
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
         }])
-        .then(function({
+        .then(({
             managerMenu
-        }) {
+        }) => {
 
             switch (true) {
                 case (managerMenu === "View Products for Sale"):
                     console.log("view products")
+                    viewProds()
                     break
 
                 case (managerMenu === "View Low Inventory"):
                     console.log("View low inventory")
+                    // viewLowInv()
                     break
 
                 case (managerMenu === "Add to Inventory"):
                     console.log("Add to Inventory")
+                    // addInv()
                     break
 
                 default:
                     console.log("Add new Product")
+                    // addNewProd()
 
             }
             connection.end();
         })
+}
+
+const viewProds = () => {
+    connection.query("select * from products", function(err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(`----------------------`)
+            console.log(`item id# ${res[i].item_id}`)
+            console.log(res[i].product_name)
+            console.log(res[i].department_name)
+            console.log(res[i].price)
+            console.log(`${res[i].stock_quantity} remaining`)
+            console.log(`----------------------`)
+        }
+    })
 }
