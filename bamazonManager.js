@@ -40,7 +40,7 @@ const afterConnect = () => {
 
                 case (managerMenu === "Add to Inventory"):
                     console.log("Add to Inventory")
-                    // addInv()
+                    addInv()
                     break
 
                 default:
@@ -48,7 +48,7 @@ const afterConnect = () => {
                     // addNewProd()
 
             }
-            connection.end();
+            // connection.end();
         })
 }
 
@@ -76,5 +76,31 @@ const viewLowInv = () => {
             console.log(`${res[i].stock_quantity} remaining`)
             console.log(`-------------------------`)
         }
+        // afterConnect()
     })
 }
+
+const addInv = () => {
+    inquirer
+        .prompt ([{
+            name: 'add',
+            type: 'input',
+            message: "Choose an item ID# to add stock"
+        }, 
+        {
+            name: 'quantity',
+            type: 'input',
+            message: "Enter amount to add to stock"
+        }
+        ])
+        .then((answer) => {
+            connection.query(`update products set stock_quantity = stock_quantity + ${answer.quantity} where item_id = ${answer.add}`, function(err, res) {
+                if (err) throw err
+            })
+            connection.query(`select * from products where item_id = ${answer.add}`, function(err, res) {
+                if (err) throw err
+                console.log(`There are now ${res[0].stock_quantity} in stock`)
+            })
+        })
+}
+
