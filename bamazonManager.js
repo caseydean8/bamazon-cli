@@ -45,7 +45,7 @@ const afterConnect = () => {
 
                 default:
                     console.log("Add new Product")
-                    // addNewProd()
+                    addNewProd()
 
             }
             // connection.end();
@@ -64,6 +64,7 @@ const viewProds = () => {
             console.log(`${res[i].stock_quantity} remaining`)
             console.log(`-------------------------`)
         }
+        connection.end()
     })
 }
 
@@ -74,24 +75,25 @@ const viewLowInv = () => {
             console.log(`-------------------------`)
             console.log(res[i].product_name)
             console.log(`${res[i].stock_quantity} remaining`)
+            console.log(`Item ID# ${res[i].item_id}`)
             console.log(`-------------------------`)
         }
-        // afterConnect()
+        connection.end()
     })
 }
 
 const addInv = () => {
     inquirer
-        .prompt ([{
-            name: 'add',
-            type: 'input',
-            message: "Choose an item ID# to add stock"
-        }, 
-        {
-            name: 'quantity',
-            type: 'input',
-            message: "Enter amount to add to stock"
-        }
+        .prompt([{
+                name: 'add',
+                type: 'input',
+                message: "Choose an item ID# to add stock"
+            },
+            {
+                name: 'quantity',
+                type: 'input',
+                message: "Enter amount to add to stock"
+            }
         ])
         .then((answer) => {
             connection.query(`update products set stock_quantity = stock_quantity + ${answer.quantity} where item_id = ${answer.add}`, function(err, res) {
@@ -101,6 +103,50 @@ const addInv = () => {
                 if (err) throw err
                 console.log(`There are now ${res[0].stock_quantity} in stock`)
             })
+            connection.end()
         })
 }
 
+const addNewProd = () => {
+    inquirer
+        .prompt([{
+                name: 'item_id',
+                type: 'input',
+                message: "Choose an item id#"
+            },
+            {
+                name: 'product_name',
+                type: 'input',
+                message: "Add product name"
+            },
+            {
+                name: 'department_name',
+                type: 'input',
+                message: "Add department name"
+            },
+            {
+                name: 'price',
+                type: 'input',
+                message: "Add price"
+            },
+            {
+                name: 'stock_quantity',
+                type: 'input',
+                message: "Add stock quantity"
+            }
+        ])
+        .then((answer) => {
+            connection.query(`insert into products set ?`, {
+                    item_id: answer.item_id,
+                    product_name: answer.product_name,
+                    department_name: answer.department_name,
+                    price: answer.price,
+                    stock_quantity: answer.stock_quantity
+                },
+                function(err, res) {
+                    if (err) throw err
+                    console.log("Product Added")
+                })
+            connection.end()
+        })
+}
