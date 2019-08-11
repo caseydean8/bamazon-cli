@@ -29,13 +29,13 @@ const afterConnect = () => {
 
             switch (true) {
                 case (managerMenu === "View Products for Sale"):
-                    console.log("view products")
+                    console.log("PRODUCT DETAILS")
                     viewProds()
                     break
 
                 case (managerMenu === "View Low Inventory"):
-                    console.log("View low inventory")
-                    // viewLowInv()
+                    console.log("LOW INVENTORY")
+                    viewLowInv()
                     break
 
                 case (managerMenu === "Add to Inventory"):
@@ -56,13 +56,25 @@ const viewProds = () => {
     connection.query("select * from products", function(err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
-            console.log(`----------------------`)
+            console.log(`-------------------------`)
             console.log(`item id# ${res[i].item_id}`)
             console.log(res[i].product_name)
             console.log(res[i].department_name)
             console.log(res[i].price)
             console.log(`${res[i].stock_quantity} remaining`)
-            console.log(`----------------------`)
+            console.log(`-------------------------`)
+        }
+    })
+}
+
+const viewLowInv = () => {
+    connection.query("select * from products where stock_quantity < 5", function(err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(`-------------------------`)
+            console.log(res[i].product_name)
+            console.log(`${res[i].stock_quantity} remaining`)
+            console.log(`-------------------------`)
         }
     })
 }
