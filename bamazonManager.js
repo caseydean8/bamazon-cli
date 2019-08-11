@@ -16,10 +16,34 @@ connection.connect(function(err) {
 })
 
 function afterConnect() {
-    inquirer.prompt([{
-        name: 'manager-menu',
-        type:'list',
-        message: "What managerial things do you want to do?",
-        choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
-    }])
+    inquirer
+        .prompt([{
+            name: 'managerMenu',
+            type: 'list',
+            message: "What managerial things do you want to do?",
+            choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
+        }])
+        .then(function({
+            managerMenu
+        }) {
+
+            switch (true) {
+                case (managerMenu === "View Products for Sale"):
+                    console.log("view products")
+                    break
+
+                case (managerMenu === "View Low Inventory"):
+                    console.log("View low inventory")
+                    break
+
+                case (managerMenu === "Add to Inventory"):
+                    console.log("Add to Inventory")
+                    break
+
+                default:
+                    console.log("Add new Product")
+
+            }
+            connection.end();
+        })
 }
