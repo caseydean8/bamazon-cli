@@ -1,6 +1,6 @@
 # bamazon-cli
 
-Bamazon is a command line program utilizing node.js and MySql server, and is dependent on node packages inquirer and msql.
+Bamazon is a command line program utilizing node.js and MySql server, and is dependent on node packages inquirer and mysql.
 
 When opened, the user is given a list of items with prices.
 
