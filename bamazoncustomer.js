@@ -17,8 +17,9 @@ connection.connect(function(err) {
 
 let quantityDesired = 0;
 let updateId = 0;
+let total = 0;
 
-function afterConnect() {
+const afterConnect = () => {
     connection.query("select * from products", function(err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++)
@@ -32,7 +33,7 @@ function afterConnect() {
                 {
                     name: 'quantity',
                     type: 'input',
-                    message: "How many of these fantastic items would you like to buy my great friend?"
+                    message: "How many would you like?"
                 }
             ])
             .then(function(answer) {
@@ -45,24 +46,41 @@ function afterConnect() {
                     // console.log(quantityDesired);
                     let stockQuantity = res[prodId].stock_quantity;
                     if (quantityDesired <= stockQuantity) {
-                        let total = (quantityDesired * res[prodId].price).toFixed(2);
+                        total = (quantityDesired * res[prodId].price).toFixed(2);
                         console.log(`${quantityDesired} X ${res[prodId].product_name} will cost $${total}`);
-                        updateQuantity();
+                        puchaseConfirmation();
                     } else {
                         console.log(`Sorry, we only have ${stockQuantity} in stock`);
                         connection.end();
                     }
                 } else {
-                    console.log("What is wrong with you? You really couldn't pick an ID number between 1 and 10? Get out of here!");
+                    console.log("Please choose a valid ID#");
                     connection.end();
                 }
             })
     })
 }
 
-function updateQuantity() {
+const puchaseConfirmation = () => {
+    inquirer
+        .prompt([{
+            name: 'confirmPurchase',
+            type: 'list',
+            message: 'Select "Complete Sale" to finish purchase',
+            choices: ["Complete Sale", "Return to Shopping"]
+        }])
+        .then((answer) => {
+            answer.confirmPurchase === "Complete Sale" ? updateQuantity() : afterConnect()
+        })
+    }
+
+const updateQuantity = () => {
     connection.query(`update products set stock_quantity = stock_quantity - ${quantityDesired} where item_id = ${updateId}`, function(err, res) {
         if (err) throw err;
+    })
+    connection.query(`update products set product_sales = product_sales + ${total} where item_id = ${updateId}`, function(err, res) {
+        if (err) throw err
+        console.log("Your order is complete! Thank you!")
     })
     connection.end();
 }

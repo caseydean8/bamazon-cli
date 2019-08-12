@@ -11,3 +11,16 @@ create table products (
     stock_quantity int not null,
     primary key (item_id)
 )
+
+
+-- table added for supervisor view
+CREATE TABLE departments (
+department_id int auto_increment not null,
+department_name varchar(100),
+overhead_costs float,
+primary key (department_id)
+)
+
+
+-- add column to products
+alter table products add product_sales decimal(5,2) not null;
