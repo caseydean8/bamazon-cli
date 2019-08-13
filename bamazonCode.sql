@@ -32,3 +32,12 @@ alter table departments drop COLUMN overhead_costs;
 
 --  add similar column to departments
 alter table departments add overhead_costs decimal(8,2) not null;
+
+-- join product sales column from products table using department_id, group by department_id 
+select departments.department_id, departments.department_name, departments.overhead_costs, products.product_sales
+from departments
+join products on departments.department_name = products.department_name
+group by departments.department_id
+
+-- below fixed error 1055
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))
