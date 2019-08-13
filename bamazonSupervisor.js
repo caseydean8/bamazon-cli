@@ -60,10 +60,10 @@ const supervisorMenu = () => {
 
                 console.log(output)
                 })
+                connection.end()
             } else {
                 addNewDept()
             }
-            connection.end()
         })
 }
 
