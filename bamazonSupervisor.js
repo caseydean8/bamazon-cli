@@ -57,12 +57,44 @@ const supervisorMenu = () => {
                 ]
                   
                 output = table(data)
-                
+
                 console.log(output)
                 })
             } else {
-                console.log("Create new apartment")
+                addNewDept()
             }
+            connection.end()
+        })
+}
+
+const addNewDept = () => {
+    inquirer
+        .prompt([{
+                name: 'department_id',
+                type: 'input',
+                message: "Choose an department id#"
+            },
+            {
+                name: 'department_name',
+                type: 'input',
+                message: "Add department name"
+            },
+            {
+                name: 'overhead_costs',
+                type: 'input',
+                message: "Add overhead costs"
+            }
+        ])
+        .then((answer) => {
+            connection.query(`insert into departments set ?`, {
+                    dept_id: answer.dept_id,
+                    dept_name: answer.dept_name,
+                    overhead_costs: answer.overhead_costs
+                },
+                function(err, res) {
+                    if (err) throw err
+                    console.log("Department Added")
+                })
             connection.end()
         })
 }
